@@ -1,20 +1,34 @@
 #include "City.h"
 
-City::City(String& name)
+City::City(String& name, int positionX, int positionY)
 {
     this->name = name;
     this->listOfNeighbors = nullptr;
+    this->positionX = positionX;
+    this->positionY = positionY;
 }
 
-City::City(String&& name)
+City::City(String&& name, int positionX, int positionY)
 {
     this->name = name;
     this->listOfNeighbors = nullptr;
+    this->positionX = positionX;
+    this->positionY = positionY;
 }
 
 String& City::getName()
 {
     return this->name;
+}
+
+int City::getPositionX()
+{
+    return this->positionX;
+}
+
+int City::getPositionY()
+{
+    return this->positionY;
 }
 
 void City::addNeighbor(String& name, int distance)
@@ -63,7 +77,7 @@ void City::addNeighbor(String& name, int distance)
 
 void City::printNeighbors()
 {
-    std::cout << "Name: " << this->name.c_str() << std::endl;
+    //std::cout << "Name: " << this->name.c_str() << std::endl;
     std::cout << "Neighbors:" << std::endl;
 
     ListOfNeighbors* currentNode = this->listOfNeighbors;
@@ -72,4 +86,6 @@ void City::printNeighbors()
         std::cout << currentNode->name.c_str() << " " << currentNode->distance << std::endl;
         currentNode = currentNode->nextNode;
     }
+
+    std::cout << std::endl;
 }

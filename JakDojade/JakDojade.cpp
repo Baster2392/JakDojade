@@ -31,6 +31,7 @@ void test()
     Map map(width, height);
     map.loadMap();
     map.checkRoads();
+    map.printCities();
 }
 
 int main()

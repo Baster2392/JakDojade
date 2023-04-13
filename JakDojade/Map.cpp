@@ -19,6 +19,14 @@ Map::Map(int width, int height)
 	}
 }
 
+Map::~Map()
+{
+	for (int i = 0; i < this->cities.getSize(); i++)
+	{
+		delete this->cities[i];
+	}
+}
+
 void Map::loadMap()
 {
 	char c;
@@ -39,9 +47,12 @@ void Map::loadMap()
 		getchar();
 	}
 
+	int positionX, positionY;
 	for (int i = 0; i < this->cityPointsX.getSize(); i++)
 	{
-		std::cout << getCityName(this->cityPointsX[i], this->cityPointsY[i]).c_str() << std::endl;
+		positionX = this->cityPointsX[i];
+		positionY = this->cityPointsY[i];
+		this->cities.pushBack(new City(getCityName(positionX, positionY), positionX, positionY));
 	}
 }
 
@@ -257,17 +268,46 @@ String Map::getCityName(int positionX, int positionY)
 	return name;
 }
 
+City* Map::getCityAtPosition(int positionX, int positionY)
+{
+	for (int i = 0; i < this->cities.getSize(); i++)
+	{
+		if (this->cities[i]->getPositionX() == positionX && this->cities[i]->getPositionY() == positionY)
+		{
+			return this->cities[i];
+		}
+	}
+
+	return nullptr;
+}
+
+City* Map::getCityByName(String& name)
+{
+	for (int i = 0; i < this->cities.getSize(); i++)
+	{
+		if (this->cities[i]->getName().c_str() == name.c_str())
+		{
+			return this->cities[i];
+		}
+	}
+
+	std::cout << "Blad" << std::endl;
+	return nullptr;
+}
+
 void Map::checkRoads()
 {
+	City* currentCity, *foundCity;
 	Vector<int> pointsX;
 	Vector<int> pointsY;
 	int posX, posY;
 	int currentX, currentY;
 
-	for (int i = 0; i < this->cityPointsX.getSize(); i++)
+	for (int i = 0; i < this->cities.getSize(); i++)
 	{
-		pointsX.pushBack(this->cityPointsX[i]);
-		pointsY.pushBack(this->cityPointsY[i]);
+		currentCity = this->cities[i];
+		pointsX.pushBack(currentCity->getPositionX());
+		pointsY.pushBack(currentCity->getPositionY());
 
 		while (pointsX.getSize() > 0)
 		{
@@ -276,6 +316,37 @@ void Map::checkRoads()
 			pointsX.erase(0);
 			pointsY.erase(0);
 
+
+			// found city
+			if (currentX > 0 && this->intMap[currentX - 1][currentY] == 0 && this->charMap[currentX - 1][currentY] == '*'
+				&& currentX != currentCity->getPositionX() && currentY != currentCity->getPositionY())
+			{
+				foundCity = getCityAtPosition(currentX - 1, currentY);
+				currentCity->addNeighbor(foundCity->getName(), this->intMap[currentX][currentY]);
+			}
+
+			if (currentX < this->width - 1 && this->intMap[currentX + 1][currentY] == 0 && this->charMap[currentX + 1][currentY] == '*'
+				&& currentX != currentCity->getPositionX() && currentY != currentCity->getPositionY())
+			{
+				foundCity = getCityAtPosition(currentX + 1, currentY);
+				currentCity->addNeighbor(foundCity->getName(), this->intMap[currentX][currentY]);
+			}
+
+			if (currentY > 0 && this->intMap[currentX][currentY - 1] == 0 && this->charMap[currentX][currentY - 1] == '*'
+				&& currentX != currentCity->getPositionX() && currentY != currentCity->getPositionY())
+			{
+				foundCity = getCityAtPosition(currentX, currentY - 1);
+				currentCity->addNeighbor(foundCity->getName(), this->intMap[currentX][currentY]);
+			}
+
+			if (currentY < this->height - 1 && this->intMap[currentX][currentY + 1] == 0 && this->charMap[currentX][currentY + 1] == '*'
+				&& currentX != currentCity->getPositionX() && currentY != currentCity->getPositionY())
+			{
+				foundCity = getCityAtPosition(currentX, currentY + 1);
+				currentCity->addNeighbor(foundCity->getName(), this->intMap[currentX][currentY]);
+			}
+
+			// found road
 			if (currentX > 0 && this->intMap[currentX - 1][currentY] == 0 && this->charMap[currentX - 1][currentY] == '#')
 			{
 				this->intMap[currentX - 1][currentY] = this->intMap[currentX][currentY] + 1;
@@ -305,7 +376,6 @@ void Map::checkRoads()
 			}
 		}
 
-		printMap();
 		zeroIntMap();
 	}
 }
@@ -328,6 +398,15 @@ void Map::printMap()
 	for (int i = 0; i < this->cityPointsX.getSize(); i++)
 	{
 		std::cout << this->cityPointsX[i] << " " << this->cityPointsY[i] << std::endl;
+	}
+}
+
+void Map::printCities()
+{
+	for (int i = 0; i < this->cities.getSize(); i++)
+	{
+		std::cout << this->cities[i]->getName().c_str() << " " << this->cities[i]->getPositionX() << " " << this->cities[i]->getPositionY() << std::endl;
+		this->cities[i]->printNeighbors();
 	}
 }
 
