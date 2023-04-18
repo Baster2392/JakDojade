@@ -440,28 +440,28 @@ void Map::checkRoads()
 				&& (currentX - 1 != currentCity->getPositionX() || currentY != currentCity->getPositionY()))
 			{
 				foundCity = getCityAtPosition(currentX - 1, currentY);
-				currentCity->addNeighbor(foundCity, this->intMap[currentX][currentY]);
+				currentCity->addNeighbor(foundCity, this->intMap[currentX][currentY] + 1);
 			}
 
 			if (currentX < this->width - 1 && this->intMap[currentX + 1][currentY] == 0 && this->charMap[currentX + 1][currentY] == '*'
 				&& (currentX + 1 != currentCity->getPositionX() || currentY != currentCity->getPositionY()))
 			{
 				foundCity = getCityAtPosition(currentX + 1, currentY);
-				currentCity->addNeighbor(foundCity, this->intMap[currentX][currentY]);
+				currentCity->addNeighbor(foundCity, this->intMap[currentX][currentY] + 1);
 			}
 
 			if (currentY > 0 && this->intMap[currentX][currentY - 1] == 0 && this->charMap[currentX][currentY - 1] == '*'
 				&& (currentX != currentCity->getPositionX() || currentY - 1 != currentCity->getPositionY()))
 			{
 				foundCity = getCityAtPosition(currentX, currentY - 1);
-				currentCity->addNeighbor(foundCity, this->intMap[currentX][currentY]);
+				currentCity->addNeighbor(foundCity, this->intMap[currentX][currentY] + 1);
 			}
 
 			if (currentY < this->height - 1 && this->intMap[currentX][currentY + 1] == 0 && this->charMap[currentX][currentY + 1] == '*'
 				&& (currentX != currentCity->getPositionX() || currentY + 1 != currentCity->getPositionY()))
 			{
 				foundCity = getCityAtPosition(currentX, currentY + 1);
-				currentCity->addNeighbor(foundCity, this->intMap[currentX][currentY]);
+				currentCity->addNeighbor(foundCity, this->intMap[currentX][currentY] + 1);
 			}
 
 			// found road
@@ -546,10 +546,10 @@ void Map::findShortestPath(String& start, String& target)
 	}
 
 	// create first node with distance 0
-	ListOfNeighbors* currentNode = new ListOfNeighbors;
-	currentNode->city = startCity;
-	currentNode->distance = 0;
-	currentNode->nextNode = nullptr;
+	ListOfNeighbors currentNode = ListOfNeighbors();
+	currentNode.city = startCity;
+	currentNode.distance = 0;
+	currentNode.nextNode = nullptr;
 
 	priorQueue.push(currentNode);
 
@@ -562,30 +562,30 @@ void Map::findShortestPath(String& start, String& target)
 		// check if verticle is visited
 		for (int i = 0; i < previous.getSize(); i++)
 		{
-			if (previous[i]->getName().equal(currentNode->city->getName().c_str()))
+			if (previous[i]->getName().equal(currentNode.city->getName().c_str()))
 			{
 				continue;
 			}
 		}
 
 		// mark as visited
-		previous.pushBack(currentNode->city);
+		previous.pushBack(currentNode.city);
 
 		// for every neighbor of currentnode
-		ListOfNeighbors* curNeigh = currentNode->city->listOfNeighbors;
+		ListOfNeighbors* curNeigh = currentNode.city->listOfNeighbors;
 		while (curNeigh != nullptr)
 		{
 			// calculate new distance
 			int index = getIndexOfCity(curNeigh->city->getName());
-			int newDistance = currentNode->distance + curNeigh->distance;
+			int newDistance = currentNode.distance + curNeigh->distance;
 			if (newDistance < distances[index])
 			{
 				distances[index] = newDistance;
-				ListOfNeighbors newNeigh;
+				ListOfNeighbors newNeigh = ListOfNeighbors();
 				newNeigh.city = curNeigh->city;
 				newNeigh.distance = newDistance;
 				newNeigh.nextNode = nullptr;
-				priorQueue.push(&newNeigh);
+				priorQueue.push(newNeigh);
 			}
 
 			curNeigh = curNeigh->nextNode;

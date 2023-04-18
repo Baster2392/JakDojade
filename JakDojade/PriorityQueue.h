@@ -4,13 +4,13 @@
 
 class PriorityQueue {
 private:
-    Vector<ListOfNeighbors*> heap;
+    Vector<ListOfNeighbors> heap;
 
     void heapifyUp(int i)
     {
         int parent = (i - 1) / 2;
-        if (i > 0 && heap[i]->distance > heap[parent]->distance) {
-            ListOfNeighbors* help = heap[i];
+        if (i > 0 && heap[i].distance > heap[parent].distance) {
+            ListOfNeighbors help = heap[i];
             heap[i] = heap[parent];
             heap[parent] = help;
 
@@ -23,14 +23,14 @@ private:
         int left_child = 2 * i + 1;
         int right_child = 2 * i + 2;
         int largest = i;
-        if (left_child < heap.getSize() && heap[left_child]->distance > heap[largest]->distance) {
+        if (left_child < heap.getSize() && heap[left_child].distance > heap[largest].distance) {
             largest = left_child;
         }
-        if (right_child < heap.getSize() && heap[right_child]->distance > heap[largest]->distance) {
+        if (right_child < heap.getSize() && heap[right_child].distance > heap[largest].distance) {
             largest = right_child;
         }
         if (largest != i) {
-            ListOfNeighbors* help = heap[i];
+            ListOfNeighbors help = heap[i];
             heap[i] = heap[largest];
             heap[largest] = help;
 
@@ -39,7 +39,7 @@ private:
     }
 
 public:
-    void push(ListOfNeighbors* value) {
+    void push(ListOfNeighbors value) {
         heap.pushBack(value);
         heapifyUp(heap.getSize() - 1);
     }
@@ -52,7 +52,7 @@ public:
         }
     }
 
-    ListOfNeighbors* top()
+    ListOfNeighbors top()
     {
         return heap[0];
     }
@@ -67,7 +67,7 @@ public:
         return heap.getSize();
     }
 
-    ListOfNeighbors* operator[](int index)
+    ListOfNeighbors operator[](int index)
     {
         return this->heap[index];
     }
