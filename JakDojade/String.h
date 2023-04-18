@@ -1,4 +1,5 @@
 #pragma once
+#include <string.h>
 
 class String {
 public:
@@ -11,71 +12,124 @@ public:
     String(const String& other)
     {
         this->length = other.length;
-        this->data = new char[length + 1];
+        this->data = new char[this->length + 1];
 
-        for (size_t i = 0; i < length + 1; ++i) {
-            data[i] = other.data[i];
+        for (size_t i = 0; i < this->length + 1; ++i) {
+            this->data[i] = other.data[i];
         }
     }
 
-    String(const char* cString) : length(0), data(nullptr) {
-        while (cString[length] != '\0') {
-            ++length;
+    String(const char* cString)
+    {
+        this->length = 0;
+        this->data = nullptr;
+
+        while (cString[this->length] != '\0') {
+            this->length++;
         }
-        data = new char[length + 1];
-        for (size_t i = 0; i < length + 1; ++i) {
-            data[i] = cString[i];
+        this->data = new char[this->length + 1];
+        for (size_t i = 0; i < this->length + 1; ++i) {
+            this->data[i] = cString[i];
         }
     }
 
     String& operator=(const String& other) {
         if (this != &other) {
-            delete[] data;
-            length = other.length;
-            data = new char[length + 1];
-            for (size_t i = 0; i < length + 1; ++i) {
-                data[i] = other.data[i];
+            delete[] this->data;
+            this->length = other.length;
+            this->data = new char[this->length + 1];
+            for (size_t i = 0; i < this->length + 1; ++i) {
+                this->data[i] = other.data[i];
             }
         }
         return *this;
     }
 
     ~String() {
-        delete[] data;
+        delete[] this->data;
     }
 
     size_t size() const {
-        return length;
+        return this->length;
     }
 
     const char* c_str() const {
-        return data;
+        return this->data;
     }
 
     void append(char c) {
-        char* newData = new char[length + 2];
-        for (size_t i = 0; i < length; ++i) {
+        char* newData = new char[this->length + 2];
+        for (size_t i = 0; i < this->length; i++) {
             newData[i] = data[i];
         }
-        newData[length] = c;
-        newData[length + 1] = '\0';
-        delete[] data;
-        data = newData;
-        ++length;
+
+        newData[this->length] = c;
+        newData[this->length + 1] = '\0';
+        delete[] this->data;
+        this->data = newData;
+        this->length++;
     }
 
     void append(const String& other) {
-        size_t newLength = length + other.length;
+        size_t newLength = this->length + other.length;
         char* newData = new char[newLength + 1];
-        for (size_t i = 0; i < length; ++i) {
-            newData[i] = data[i];
+        for (size_t i = 0; i < this->length; ++i) {
+            newData[i] = this->data[i];
         }
         for (size_t i = 0; i < other.length + 1; ++i) {
-            newData[length + i] = other.data[i];
+            newData[this->length + i] = other.data[i];
         }
-        delete[] data;
-        data = newData;
-        length = newLength;
+
+        delete[] this->data;
+
+        this->data = newData;
+        this->length = newLength;
+    }
+
+    int toNumber()
+    {
+        int number = 0;
+
+        for (int i = 0; i < this->length; i++)
+        {
+
+        }
+    }
+
+    bool equal(char* str)
+    {
+        if (this->length == strlen(str))
+        {
+            for (int i = 0; i < this->length; i++)
+            {
+                if (this->data[i] != str[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    bool equal(const char* str)
+    {
+        if (this->length == strlen(str))
+        {
+            for (int i = 0; i < this->length; i++)
+            {
+                if (this->data[i] != str[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
 private:

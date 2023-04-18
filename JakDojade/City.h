@@ -1,30 +1,38 @@
 #pragma once
 #include <iostream>
 #include "String.h"
+
+struct ListOfNeighbors;
+
 class City
 {
 private:
-	struct ListOfNeighbors
-	{
-		String name;
-		int distance;
-		ListOfNeighbors* nextNode;
-	};
-
 	String name;
-	ListOfNeighbors* listOfNeighbors;
 	int positionX;
 	int positionY;
+	int numberOfNeighbors;
 
 public:
+	ListOfNeighbors* listOfNeighbors;
+
 	City(String& name, int positionX, int positionY);
 	City(String&& name, int positionX, int positionY);
+	~City();
 
 	String& getName();
 	int getPositionX();
 	int getPositionY();
+	int getNumberOfNeighbors();
 
-	void addNeighbor(String& name, int distance);
+	void addNeighbor(City* city, int distance);
+	ListOfNeighbors* getSmallestVertex();
 	void printNeighbors();
+};
+
+struct ListOfNeighbors
+{
+	City* city;
+	int distance;
+	ListOfNeighbors* nextNode;
 };
 

@@ -25,13 +25,15 @@ void add(Vector<Cords>& v)
 void test()
 {
     int height, width;
-    cin >> width >> height;
-    getchar();
+    String str1("AA"), str2("BB");
+    //cin >> width >> height;
+    //getchar();
 
-    Map map(width, height);
-    map.loadMap();
-    map.checkRoads();
-    map.printCities();
+    Map map(33, 23);
+    map.loadFromFile();
+    //map.checkRoads();
+    //map.printCities();
+    //map.findShortestPath(str1, str2);
 }
 
 int main()

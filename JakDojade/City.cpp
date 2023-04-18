@@ -4,6 +4,7 @@ City::City(String& name, int positionX, int positionY)
 {
     this->name = name;
     this->listOfNeighbors = nullptr;
+    this->numberOfNeighbors = 0;
     this->positionX = positionX;
     this->positionY = positionY;
 }
@@ -12,8 +13,21 @@ City::City(String&& name, int positionX, int positionY)
 {
     this->name = name;
     this->listOfNeighbors = nullptr;
+    this->numberOfNeighbors = 0;
     this->positionX = positionX;
     this->positionY = positionY;
+}
+
+City::~City()
+{
+    ListOfNeighbors* currentNode = this->listOfNeighbors;
+    ListOfNeighbors* toDelete = this->listOfNeighbors;
+    while (currentNode != nullptr)
+    {
+        toDelete = currentNode;
+        currentNode = currentNode->nextNode;
+        delete toDelete;
+    }
 }
 
 String& City::getName()
@@ -31,12 +45,18 @@ int City::getPositionY()
     return this->positionY;
 }
 
-void City::addNeighbor(String& name, int distance)
+int City::getNumberOfNeighbors()
+{
+    return this->numberOfNeighbors;
+}
+
+void City::addNeighbor(City* city, int distance)
 {
     ListOfNeighbors* newNode = new ListOfNeighbors;
-    newNode->name = name;
+    newNode->city = city;
     newNode->distance = distance;
     newNode->nextNode = nullptr;
+    this->numberOfNeighbors++;
 
     if (this->listOfNeighbors == nullptr)
     {
@@ -75,6 +95,11 @@ void City::addNeighbor(String& name, int distance)
     }
 }
 
+ListOfNeighbors* City::getSmallestVertex()
+{
+    return this->listOfNeighbors;
+}
+
 void City::printNeighbors()
 {
     //std::cout << "Name: " << this->name.c_str() << std::endl;
@@ -83,7 +108,7 @@ void City::printNeighbors()
     ListOfNeighbors* currentNode = this->listOfNeighbors;
     while (currentNode != nullptr)
     {
-        std::cout << currentNode->name.c_str() << " " << currentNode->distance << std::endl;
+        std::cout << currentNode->city->getName().c_str() << " " << currentNode->distance << std::endl;
         currentNode = currentNode->nextNode;
     }
 
