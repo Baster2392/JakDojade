@@ -72,4 +72,3 @@ public:
         return this->heap[index];
     }
 };
-

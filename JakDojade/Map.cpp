@@ -1,4 +1,4 @@
-#include "Map.h"
+ï»¿#include "Map.h"
 
 Map::Map(int width, int height)
 {
@@ -130,7 +130,7 @@ void Map::loadMap()
 	// loading airlines
 	int numberOfAirlines, distanceAir;
 	char start[100], target[100];
-	City* startCity, *targetCity;
+	City* startCity, * targetCity;
 	scanf_s("%d", &numberOfAirlines);
 
 	for (int i = 0; i < numberOfAirlines; i++)
@@ -152,7 +152,7 @@ String Map::getCityName(int positionX, int positionY)
 	// nazwa z prawej
 	if (positionX < this->width - 1 &&
 		this->charMap[positionX + 1][positionY] != '*' &&
-		this->charMap[positionX + 1][positionY] != '.' && 
+		this->charMap[positionX + 1][positionY] != '.' &&
 		this->charMap[positionX + 1][positionY] != '#')
 	{
 		pointerPosX++;
@@ -166,7 +166,7 @@ String Map::getCityName(int positionX, int positionY)
 		}
 	}
 	// nazwa z lewej
-	else 
+	else
 		if (positionX > 0 &&
 			this->charMap[positionX - 1][positionY] != '*' &&
 			this->charMap[positionX - 1][positionY] != '.' &&
@@ -188,171 +188,171 @@ String Map::getCityName(int positionX, int positionY)
 				pointerPosX++;
 			}
 		}
-	// nazwa u góry
-	else 
-		if (positionY > 0 &&
-			this->charMap[positionX][positionY - 1] != '*' &&
-			this->charMap[positionX][positionY - 1] != '.' &&
-			this->charMap[positionX][positionY - 1] != '#')
-		{
-			pointerPosY--;
-			while (pointerPosX >= 0 &&
-				this->charMap[pointerPosX][pointerPosY] != '*' &&
-				this->charMap[pointerPosX][pointerPosY] != '.' &&
-				this->charMap[pointerPosX][pointerPosY] != '#')
+	// nazwa u gÃ³ry
+		else
+			if (positionY > 0 &&
+				this->charMap[positionX][positionY - 1] != '*' &&
+				this->charMap[positionX][positionY - 1] != '.' &&
+				this->charMap[positionX][positionY - 1] != '#')
 			{
-				pointerPosX--;
-			}
-
-			pointerPosX++;
-			while (pointerPosX < this->width &&
-				this->charMap[pointerPosX][pointerPosY] != '*' &&
-				this->charMap[pointerPosX][pointerPosY] != '.' &&
-				this->charMap[pointerPosX][pointerPosY] != '#')
-			{
-				name.append(this->charMap[pointerPosX][pointerPosY]);
-				pointerPosX++;
-			}
-		}
-	// nazwa z do³u
-	else 
-		if (positionY < this->height - 1 &&
-			this->charMap[positionX][positionY + 1] != '*' &&
-			this->charMap[positionX][positionY + 1] != '.' &&
-			this->charMap[positionX][positionY + 1] != '#')
-		{
-			pointerPosY++;
-			while (pointerPosX >= 0 &&
-				this->charMap[pointerPosX][pointerPosY] != '*' &&
-				this->charMap[pointerPosX][pointerPosY] != '.' &&
-				this->charMap[pointerPosX][pointerPosY] != '#')
-			{
-				pointerPosX--;
-			}
+				pointerPosY--;
+				while (pointerPosX >= 0 &&
+					this->charMap[pointerPosX][pointerPosY] != '*' &&
+					this->charMap[pointerPosX][pointerPosY] != '.' &&
+					this->charMap[pointerPosX][pointerPosY] != '#')
+				{
+					pointerPosX--;
+				}
 
 				pointerPosX++;
-			
-			while (pointerPosX < this->width &&
-				this->charMap[pointerPosX][pointerPosY] != '*' &&
-				this->charMap[pointerPosX][pointerPosY] != '.' &&
-				this->charMap[pointerPosX][pointerPosY] != '#')
-			{
-				name.append(this->charMap[pointerPosX][pointerPosY]);
-				pointerPosX++;
+				while (pointerPosX < this->width &&
+					this->charMap[pointerPosX][pointerPosY] != '*' &&
+					this->charMap[pointerPosX][pointerPosY] != '.' &&
+					this->charMap[pointerPosX][pointerPosY] != '#')
+				{
+					name.append(this->charMap[pointerPosX][pointerPosY]);
+					pointerPosX++;
+				}
 			}
-		}
-	// nazwa w górnym prawym rogu
-	else
-		if (positionY > 0 &&
-			positionX < this->width - 1 &&
-			this->charMap[positionX + 1][positionY - 1] != '*' &&
-			this->charMap[positionX + 1][positionY - 1] != '.' &&
-			this->charMap[positionX + 1][positionY - 1] != '#')
-	{
-		pointerPosX++;
-		pointerPosY--;
-		while (pointerPosX >= 0 &&
-			this->charMap[pointerPosX][pointerPosY] != '*' &&
-			this->charMap[pointerPosX][pointerPosY] != '.' &&
-			this->charMap[pointerPosX][pointerPosY] != '#')
-		{
-			pointerPosX--;
-		}
+	// nazwa z doÂ³u
+			else
+				if (positionY < this->height - 1 &&
+					this->charMap[positionX][positionY + 1] != '*' &&
+					this->charMap[positionX][positionY + 1] != '.' &&
+					this->charMap[positionX][positionY + 1] != '#')
+				{
+					pointerPosY++;
+					while (pointerPosX >= 0 &&
+						this->charMap[pointerPosX][pointerPosY] != '*' &&
+						this->charMap[pointerPosX][pointerPosY] != '.' &&
+						this->charMap[pointerPosX][pointerPosY] != '#')
+					{
+						pointerPosX--;
+					}
 
-		pointerPosX++;
-		while (pointerPosX < this->width &&
-			this->charMap[pointerPosX][pointerPosY] != '*' &&
-			this->charMap[pointerPosX][pointerPosY] != '.' &&
-			this->charMap[pointerPosX][pointerPosY] != '#')
-		{
-			name.append(this->charMap[pointerPosX][pointerPosY]);
-			pointerPosX++;
-		}
-	}
+					pointerPosX++;
+
+					while (pointerPosX < this->width &&
+						this->charMap[pointerPosX][pointerPosY] != '*' &&
+						this->charMap[pointerPosX][pointerPosY] != '.' &&
+						this->charMap[pointerPosX][pointerPosY] != '#')
+					{
+						name.append(this->charMap[pointerPosX][pointerPosY]);
+						pointerPosX++;
+					}
+				}
+	// nazwa w gÃ³rnym prawym rogu
+				else
+					if (positionY > 0 &&
+						positionX < this->width - 1 &&
+						this->charMap[positionX + 1][positionY - 1] != '*' &&
+						this->charMap[positionX + 1][positionY - 1] != '.' &&
+						this->charMap[positionX + 1][positionY - 1] != '#')
+					{
+						pointerPosX++;
+						pointerPosY--;
+						while (pointerPosX >= 0 &&
+							this->charMap[pointerPosX][pointerPosY] != '*' &&
+							this->charMap[pointerPosX][pointerPosY] != '.' &&
+							this->charMap[pointerPosX][pointerPosY] != '#')
+						{
+							pointerPosX--;
+						}
+
+						pointerPosX++;
+						while (pointerPosX < this->width &&
+							this->charMap[pointerPosX][pointerPosY] != '*' &&
+							this->charMap[pointerPosX][pointerPosY] != '.' &&
+							this->charMap[pointerPosX][pointerPosY] != '#')
+						{
+							name.append(this->charMap[pointerPosX][pointerPosY]);
+							pointerPosX++;
+						}
+					}
 	// nazwa w dolnym prawym rogu
-	else
-		if (positionY < this->height - 1 &&
-		positionX < this->width - 1 &&
-		this->charMap[positionX + 1][positionY + 1] != '*' &&
-		this->charMap[positionX + 1][positionY + 1] != '.' &&
-		this->charMap[positionX + 1][positionY + 1] != '#')
-	{
-		pointerPosX++;
-		pointerPosY++;
-		while (pointerPosX >= 0 &&
-			this->charMap[pointerPosX][pointerPosY] != '*' &&
-			this->charMap[pointerPosX][pointerPosY] != '.' &&
-			this->charMap[pointerPosX][pointerPosY] != '#')
-		{
-			pointerPosX--;
-		}
+					else
+						if (positionY < this->height - 1 &&
+							positionX < this->width - 1 &&
+							this->charMap[positionX + 1][positionY + 1] != '*' &&
+							this->charMap[positionX + 1][positionY + 1] != '.' &&
+							this->charMap[positionX + 1][positionY + 1] != '#')
+						{
+							pointerPosX++;
+							pointerPosY++;
+							while (pointerPosX >= 0 &&
+								this->charMap[pointerPosX][pointerPosY] != '*' &&
+								this->charMap[pointerPosX][pointerPosY] != '.' &&
+								this->charMap[pointerPosX][pointerPosY] != '#')
+							{
+								pointerPosX--;
+							}
 
-		pointerPosX++;
-		while (pointerPosX < this->width &&
-			this->charMap[pointerPosX][pointerPosY] != '*' &&
-			this->charMap[pointerPosX][pointerPosY] != '.' &&
-			this->charMap[pointerPosX][pointerPosY] != '#')
-		{
-			name.append(this->charMap[pointerPosX][pointerPosY]);
-			pointerPosX++;
-		}
-	}
-	// nazwa w górnym lewym rogu
-	else 
-		if (positionY > 0 &&
-			positionX > 0 &&
-			this->charMap[positionX - 1][positionY - 1] != '*' &&
-			this->charMap[positionX - 1][positionY - 1] != '.' &&
-			this->charMap[positionX - 1][positionY - 1] != '#')
-		{
-			pointerPosX--;
-			pointerPosY--;
-			while (pointerPosX >= 0 &&
-				this->charMap[pointerPosX][pointerPosY] != '*' &&
-				this->charMap[pointerPosX][pointerPosY] != '.' &&
-				this->charMap[pointerPosX][pointerPosY] != '#')
-			{
-				pointerPosX--;
-			}
+							pointerPosX++;
+							while (pointerPosX < this->width &&
+								this->charMap[pointerPosX][pointerPosY] != '*' &&
+								this->charMap[pointerPosX][pointerPosY] != '.' &&
+								this->charMap[pointerPosX][pointerPosY] != '#')
+							{
+								name.append(this->charMap[pointerPosX][pointerPosY]);
+								pointerPosX++;
+							}
+						}
+	// nazwa w gÃ³rnym lewym rogu
+						else
+							if (positionY > 0 &&
+								positionX > 0 &&
+								this->charMap[positionX - 1][positionY - 1] != '*' &&
+								this->charMap[positionX - 1][positionY - 1] != '.' &&
+								this->charMap[positionX - 1][positionY - 1] != '#')
+							{
+								pointerPosX--;
+								pointerPosY--;
+								while (pointerPosX >= 0 &&
+									this->charMap[pointerPosX][pointerPosY] != '*' &&
+									this->charMap[pointerPosX][pointerPosY] != '.' &&
+									this->charMap[pointerPosX][pointerPosY] != '#')
+								{
+									pointerPosX--;
+								}
 
-			pointerPosX++;
-			while (pointerPosX < this->width &&
-				this->charMap[pointerPosX][pointerPosY] != '*' &&
-				this->charMap[pointerPosX][pointerPosY] != '.' &&
-				this->charMap[pointerPosX][pointerPosY] != '#')
-			{
-				name.append(this->charMap[pointerPosX][pointerPosY]);
-				pointerPosX++;
-			}
-		}
+								pointerPosX++;
+								while (pointerPosX < this->width &&
+									this->charMap[pointerPosX][pointerPosY] != '*' &&
+									this->charMap[pointerPosX][pointerPosY] != '.' &&
+									this->charMap[pointerPosX][pointerPosY] != '#')
+								{
+									name.append(this->charMap[pointerPosX][pointerPosY]);
+									pointerPosX++;
+								}
+							}
 	// nazwa w dolnym lewym rogu
-	else
-		if (positionY < this->height - 1 &&
-			positionX > 0 &&
-			this->charMap[positionX - 1][positionY + 1] != '*' &&
-			this->charMap[positionX - 1][positionY + 1] != '.' &&
-			this->charMap[positionX - 1][positionY + 1] != '#')
-		{
-			pointerPosX--;
-			pointerPosY++;
-			while (pointerPosX >= 0 &&
-				this->charMap[pointerPosX][pointerPosY] != '*' &&
-				this->charMap[pointerPosX][pointerPosY] != '.' &&
-				this->charMap[pointerPosX][pointerPosY] != '#')
-			{
-				pointerPosX--;
-			}
+							else
+								if (positionY < this->height - 1 &&
+									positionX > 0 &&
+									this->charMap[positionX - 1][positionY + 1] != '*' &&
+									this->charMap[positionX - 1][positionY + 1] != '.' &&
+									this->charMap[positionX - 1][positionY + 1] != '#')
+								{
+									pointerPosX--;
+									pointerPosY++;
+									while (pointerPosX >= 0 &&
+										this->charMap[pointerPosX][pointerPosY] != '*' &&
+										this->charMap[pointerPosX][pointerPosY] != '.' &&
+										this->charMap[pointerPosX][pointerPosY] != '#')
+									{
+										pointerPosX--;
+									}
 
-			pointerPosX++;
-			while (pointerPosX < this->width &&
-				this->charMap[pointerPosX][pointerPosY] != '*' &&
-				this->charMap[pointerPosX][pointerPosY] != '.' &&
-				this->charMap[pointerPosX][pointerPosY] != '#')
-			{
-				name.append(this->charMap[pointerPosX][pointerPosY]);
-				pointerPosX++;
-			}
-		}
+									pointerPosX++;
+									while (pointerPosX < this->width &&
+										this->charMap[pointerPosX][pointerPosY] != '*' &&
+										this->charMap[pointerPosX][pointerPosY] != '.' &&
+										this->charMap[pointerPosX][pointerPosY] != '#')
+									{
+										name.append(this->charMap[pointerPosX][pointerPosY]);
+										pointerPosX++;
+									}
+								}
 
 	return name;
 }
@@ -415,7 +415,7 @@ int Map::getIndexOfCity(String& name)
 
 void Map::checkRoads()
 {
-	City* currentCity, *foundCity;
+	City* currentCity, * foundCity;
 	Vector<int> pointsX;
 	Vector<int> pointsY;
 	int posX, posY;
@@ -581,11 +581,11 @@ void Map::findShortestPath(String& start, String& target)
 			if (newDistance < distances[index])
 			{
 				distances[index] = newDistance;
-				ListOfNeighbors* newNeigh = new ListOfNeighbors;
-				newNeigh->city = curNeigh->city;
-				newNeigh->distance = newDistance;
-				newNeigh->nextNode = nullptr;
-				priorQueue.push(newNeigh);
+				ListOfNeighbors newNeigh;
+				newNeigh.city = curNeigh->city;
+				newNeigh.distance = newDistance;
+				newNeigh.nextNode = nullptr;
+				priorQueue.push(&newNeigh);
 			}
 
 			curNeigh = curNeigh->nextNode;
