@@ -33,13 +33,14 @@ void Map::loadFromFile()
 	FILE* file;
 	fopen_s(&file, "map.txt", "r");
 	fscanf_s(file, "%d %d", &rows, &lines);
-	char line[1000];
+	char line[10000];
 
-	fgets(line, 100, file);
+	fgets(line, 10000, file);
+	//std::cout << line;
 	for (int i = 0; i < lines; i++)
 	{
-		fgets(line, 100, file);
-		std::cout << line;
+		fgets(line, 10000, file);
+		//std::cout << line;
 		for (int j = 0; j < rows; j++)
 		{
 			if (line[j] == '*')
@@ -57,7 +58,7 @@ void Map::loadFromFile()
 	{
 		positionX = this->cityPointsX[i];
 		positionY = this->cityPointsY[i];
-		this->cities.pushBack(new City(getCityName(positionX, positionY), positionX, positionY));
+		this->cities.pushBack(new City(getCityName(positionX, positionY), positionX, positionY, this->cities.getSize()));
 	}
 
 	// loading airlines
@@ -65,34 +66,28 @@ void Map::loadFromFile()
 	char start[100], target[100];
 	City* startCity, * targetCity;
 	fscanf_s(file, "%d", &numberOfAirlines);
-	//std::cout << numberOfAirlines << std::endl;
 
 	for (int i = 0; i < numberOfAirlines; i++)
 	{
 		fscanf_s(file, "%s %s %d", start, 100, target, 100, &distanceAir);
-		//std::cout << start << " " << target << " " << distanceAir << std::endl;
 		startCity = getCityByName(start);
 		targetCity = getCityByName(target);
 
 		startCity->addNeighbor(targetCity, distanceAir);
 	}
 
-	int numberOfQueries = 0;
+	int numberOfQueries = 0, mode = 0;
 	fscanf_s(file, "%d", &numberOfQueries);
 	String str1, str2;
 
-	//std::cout << numberOfQueries << std::endl;
 	checkRoads();
-
-	//printCities();
 
 	for (int i = 0; i < numberOfQueries; i++)
 	{
-		fscanf_s(file, "%s %s", start, 100, target, 100);
-		std::cout << start << " " << target << "c" << std::endl;
+		fscanf_s(file, "%s %s %d", start, 100, target, 100, &mode);
 		str1 = start;
 		str2 = target;
-		findShortestPath(str1, str2);
+		findShortestPath(str1, str2, mode);
 	}
 
 	fclose(file);
@@ -116,6 +111,7 @@ void Map::loadMap()
 
 			this->charMap[j][i] = c;
 		}
+
 		getchar();
 	}
 
@@ -124,7 +120,7 @@ void Map::loadMap()
 	{
 		positionX = this->cityPointsX[i];
 		positionY = this->cityPointsY[i];
-		this->cities.pushBack(new City(getCityName(positionX, positionY), positionX, positionY));
+		this->cities.pushBack(new City(getCityName(positionX, positionY), positionX, positionY, this->cities.getSize()));
 	}
 
 	// loading airlines
@@ -136,11 +132,24 @@ void Map::loadMap()
 	for (int i = 0; i < numberOfAirlines; i++)
 	{
 		scanf_s("%s %s %d", start, 100, target, 100, &distanceAir);
-		//std::cout << start << " " << target << " " << distanceAir << std::endl;
 		startCity = getCityByName(start);
 		targetCity = getCityByName(target);
 
 		startCity->addNeighbor(targetCity, distanceAir);
+	}
+
+	int numberOfQueries = 0, mode = 0;
+	scanf_s("%d", &numberOfQueries);
+	String str1, str2;
+
+	checkRoads();
+
+	for (int i = 0; i < numberOfQueries; i++)
+	{
+		scanf_s("%s %s %d", start, 100, target, 100, &mode);
+		str1 = start;
+		str2 = target;
+		findShortestPath(str1, str2, mode);
 	}
 }
 
@@ -189,170 +198,170 @@ String Map::getCityName(int positionX, int positionY)
 			}
 		}
 	// nazwa u góry
-		else
-			if (positionY > 0 &&
-				this->charMap[positionX][positionY - 1] != '*' &&
-				this->charMap[positionX][positionY - 1] != '.' &&
-				this->charMap[positionX][positionY - 1] != '#')
+	else
+		if (positionY > 0 &&
+			this->charMap[positionX][positionY - 1] != '*' &&
+			this->charMap[positionX][positionY - 1] != '.' &&
+			this->charMap[positionX][positionY - 1] != '#')
+		{
+		pointerPosY--;
+			while (pointerPosX >= 0 &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
 			{
-				pointerPosY--;
-				while (pointerPosX >= 0 &&
-					this->charMap[pointerPosX][pointerPosY] != '*' &&
-					this->charMap[pointerPosX][pointerPosY] != '.' &&
-					this->charMap[pointerPosX][pointerPosY] != '#')
-				{
-					pointerPosX--;
-				}
-
-				pointerPosX++;
-				while (pointerPosX < this->width &&
-					this->charMap[pointerPosX][pointerPosY] != '*' &&
-					this->charMap[pointerPosX][pointerPosY] != '.' &&
-					this->charMap[pointerPosX][pointerPosY] != '#')
-				{
-					name.append(this->charMap[pointerPosX][pointerPosY]);
-					pointerPosX++;
-				}
+				pointerPosX--;
 			}
+
+			pointerPosX++;
+			while (pointerPosX < this->width &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				name.append(this->charMap[pointerPosX][pointerPosY]);
+				pointerPosX++;
+			}
+		}
 	// nazwa z do³u
-			else
-				if (positionY < this->height - 1 &&
-					this->charMap[positionX][positionY + 1] != '*' &&
-					this->charMap[positionX][positionY + 1] != '.' &&
-					this->charMap[positionX][positionY + 1] != '#')
-				{
-					pointerPosY++;
-					while (pointerPosX >= 0 &&
-						this->charMap[pointerPosX][pointerPosY] != '*' &&
-						this->charMap[pointerPosX][pointerPosY] != '.' &&
-						this->charMap[pointerPosX][pointerPosY] != '#')
-					{
-						pointerPosX--;
-					}
+	else
+		if (positionY < this->height - 1 &&
+			this->charMap[positionX][positionY + 1] != '*' &&
+			this->charMap[positionX][positionY + 1] != '.' &&
+			this->charMap[positionX][positionY + 1] != '#')
+		{
+			pointerPosY++;
+			while (pointerPosX >= 0 &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				pointerPosX--;
+			}
 
-					pointerPosX++;
+			pointerPosX++;
 
-					while (pointerPosX < this->width &&
-						this->charMap[pointerPosX][pointerPosY] != '*' &&
-						this->charMap[pointerPosX][pointerPosY] != '.' &&
-						this->charMap[pointerPosX][pointerPosY] != '#')
-					{
-						name.append(this->charMap[pointerPosX][pointerPosY]);
-						pointerPosX++;
-					}
-				}
+			while (pointerPosX < this->width &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				name.append(this->charMap[pointerPosX][pointerPosY]);
+				pointerPosX++;
+			}
+		}
 	// nazwa w górnym prawym rogu
-				else
-					if (positionY > 0 &&
-						positionX < this->width - 1 &&
-						this->charMap[positionX + 1][positionY - 1] != '*' &&
-						this->charMap[positionX + 1][positionY - 1] != '.' &&
-						this->charMap[positionX + 1][positionY - 1] != '#')
-					{
-						pointerPosX++;
-						pointerPosY--;
-						while (pointerPosX >= 0 &&
-							this->charMap[pointerPosX][pointerPosY] != '*' &&
-							this->charMap[pointerPosX][pointerPosY] != '.' &&
-							this->charMap[pointerPosX][pointerPosY] != '#')
-						{
-							pointerPosX--;
-						}
+	else
+		if (positionY > 0 &&
+			positionX < this->width - 1 &&
+			this->charMap[positionX + 1][positionY - 1] != '*' &&
+			this->charMap[positionX + 1][positionY - 1] != '.' &&
+			this->charMap[positionX + 1][positionY - 1] != '#')
+		{
+			pointerPosX++;
+			pointerPosY--;
+			while (pointerPosX >= 0 &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				pointerPosX--;
+			}
 
-						pointerPosX++;
-						while (pointerPosX < this->width &&
-							this->charMap[pointerPosX][pointerPosY] != '*' &&
-							this->charMap[pointerPosX][pointerPosY] != '.' &&
-							this->charMap[pointerPosX][pointerPosY] != '#')
-						{
-							name.append(this->charMap[pointerPosX][pointerPosY]);
-							pointerPosX++;
-						}
-					}
+			pointerPosX++;
+			while (pointerPosX < this->width &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				name.append(this->charMap[pointerPosX][pointerPosY]);
+				pointerPosX++;
+			}
+		}
 	// nazwa w dolnym prawym rogu
-					else
-						if (positionY < this->height - 1 &&
-							positionX < this->width - 1 &&
-							this->charMap[positionX + 1][positionY + 1] != '*' &&
-							this->charMap[positionX + 1][positionY + 1] != '.' &&
-							this->charMap[positionX + 1][positionY + 1] != '#')
-						{
-							pointerPosX++;
-							pointerPosY++;
-							while (pointerPosX >= 0 &&
-								this->charMap[pointerPosX][pointerPosY] != '*' &&
-								this->charMap[pointerPosX][pointerPosY] != '.' &&
-								this->charMap[pointerPosX][pointerPosY] != '#')
-							{
-								pointerPosX--;
-							}
+	else
+		if (positionY < this->height - 1 &&
+			positionX < this->width - 1 &&
+			this->charMap[positionX + 1][positionY + 1] != '*' &&
+			this->charMap[positionX + 1][positionY + 1] != '.' &&
+			this->charMap[positionX + 1][positionY + 1] != '#')
+		{
+			pointerPosX++;
+			pointerPosY++;
+			while (pointerPosX >= 0 &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				pointerPosX--;
+			}
 
-							pointerPosX++;
-							while (pointerPosX < this->width &&
-								this->charMap[pointerPosX][pointerPosY] != '*' &&
-								this->charMap[pointerPosX][pointerPosY] != '.' &&
-								this->charMap[pointerPosX][pointerPosY] != '#')
-							{
-								name.append(this->charMap[pointerPosX][pointerPosY]);
-								pointerPosX++;
-							}
-						}
+			pointerPosX++;
+			while (pointerPosX < this->width &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				name.append(this->charMap[pointerPosX][pointerPosY]);
+				pointerPosX++;
+			}
+		}
 	// nazwa w górnym lewym rogu
-						else
-							if (positionY > 0 &&
-								positionX > 0 &&
-								this->charMap[positionX - 1][positionY - 1] != '*' &&
-								this->charMap[positionX - 1][positionY - 1] != '.' &&
-								this->charMap[positionX - 1][positionY - 1] != '#')
-							{
-								pointerPosX--;
-								pointerPosY--;
-								while (pointerPosX >= 0 &&
-									this->charMap[pointerPosX][pointerPosY] != '*' &&
-									this->charMap[pointerPosX][pointerPosY] != '.' &&
-									this->charMap[pointerPosX][pointerPosY] != '#')
-								{
-									pointerPosX--;
-								}
+	else
+		if (positionY > 0 &&
+			positionX > 0 &&
+			this->charMap[positionX - 1][positionY - 1] != '*' &&
+			this->charMap[positionX - 1][positionY - 1] != '.' &&
+			this->charMap[positionX - 1][positionY - 1] != '#')
+		{
+			pointerPosX--;
+			pointerPosY--;
+			while (pointerPosX >= 0 &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				pointerPosX--;
+			}
 
-								pointerPosX++;
-								while (pointerPosX < this->width &&
-									this->charMap[pointerPosX][pointerPosY] != '*' &&
-									this->charMap[pointerPosX][pointerPosY] != '.' &&
-									this->charMap[pointerPosX][pointerPosY] != '#')
-								{
-									name.append(this->charMap[pointerPosX][pointerPosY]);
-									pointerPosX++;
-								}
+			pointerPosX++;
+			while (pointerPosX < this->width &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				name.append(this->charMap[pointerPosX][pointerPosY]);
+				pointerPosX++;
+			}
 							}
 	// nazwa w dolnym lewym rogu
-							else
-								if (positionY < this->height - 1 &&
-									positionX > 0 &&
-									this->charMap[positionX - 1][positionY + 1] != '*' &&
-									this->charMap[positionX - 1][positionY + 1] != '.' &&
-									this->charMap[positionX - 1][positionY + 1] != '#')
-								{
-									pointerPosX--;
-									pointerPosY++;
-									while (pointerPosX >= 0 &&
-										this->charMap[pointerPosX][pointerPosY] != '*' &&
-										this->charMap[pointerPosX][pointerPosY] != '.' &&
-										this->charMap[pointerPosX][pointerPosY] != '#')
-									{
-										pointerPosX--;
-									}
+	else
+		if (positionY < this->height - 1 &&
+			positionX > 0 &&
+			this->charMap[positionX - 1][positionY + 1] != '*' &&
+			this->charMap[positionX - 1][positionY + 1] != '.' &&
+			this->charMap[positionX - 1][positionY + 1] != '#')
+		{
+			pointerPosX--;
+			pointerPosY++;
+			while (pointerPosX >= 0 &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				pointerPosX--;
+			}
 
-									pointerPosX++;
-									while (pointerPosX < this->width &&
-										this->charMap[pointerPosX][pointerPosY] != '*' &&
-										this->charMap[pointerPosX][pointerPosY] != '.' &&
-										this->charMap[pointerPosX][pointerPosY] != '#')
-									{
-										name.append(this->charMap[pointerPosX][pointerPosY]);
-										pointerPosX++;
-									}
-								}
+			pointerPosX++;
+			while (pointerPosX < this->width &&
+				this->charMap[pointerPosX][pointerPosY] != '*' &&
+				this->charMap[pointerPosX][pointerPosY] != '.' &&
+				this->charMap[pointerPosX][pointerPosY] != '#')
+			{
+				name.append(this->charMap[pointerPosX][pointerPosY]);
+				pointerPosX++;
+			}
+		}
 
 	return name;
 }
@@ -494,8 +503,6 @@ void Map::checkRoads()
 			}
 		}
 
-		//std::cout << currentCity->getName().c_str() << std::endl;
-		//printMap();
 		zeroIntMap();
 	}
 }
@@ -530,19 +537,27 @@ void Map::printCities()
 	}
 }
 
-void Map::findShortestPath(String& start, String& target)
+void Map::findShortestPath(String& start, String& target, int mode)
 {
+	if (start.equal(target.c_str()))
+	{
+		std::cout << 0 << std::endl;
+		return;
+	}
+
 	int* distances = new int[this->cities.getSize()];
+	City** listOfPrev = new City*[this->cities.getSize()];
+
 	bool visited = false;
 	City* startCity = getCityByName(start);
 	City* targetCity = getCityByName(target);
 	Vector<City*> previous;
-	//String* shortestPath = new String[this->cities.getSize()];
 	PriorityQueue priorQueue;
 
 	for (int i = 0; i < this->cities.getSize(); i++)
 	{
 		distances[i] = 1000000;
+		listOfPrev[i] = nullptr;
 	}
 
 	// create first node with distance 0
@@ -576,11 +591,13 @@ void Map::findShortestPath(String& start, String& target)
 		while (curNeigh != nullptr)
 		{
 			// calculate new distance
-			int index = getIndexOfCity(curNeigh->city->getName());
+			int index = curNeigh->city->getIndex();
 			int newDistance = currentNode.distance + curNeigh->distance;
 			if (newDistance < distances[index])
 			{
 				distances[index] = newDistance;
+				listOfPrev[index] = currentNode.city;
+
 				ListOfNeighbors newNeigh = ListOfNeighbors();
 				newNeigh.city = curNeigh->city;
 				newNeigh.distance = newDistance;
@@ -592,7 +609,29 @@ void Map::findShortestPath(String& start, String& target)
 		}
 	}
 
-	std::cout << distances[getIndexOfCity(target)] << std::endl;
+	std::cout << distances[targetCity->getIndex()];
+
+	if (mode == PRINT_PATH_MODE)
+	{
+		// creating shortest path
+		Vector<City*> shortestPath;
+		City* currentCity = targetCity;
+
+		while (currentCity != startCity && currentCity != nullptr)
+		{
+			shortestPath.pushBack(currentCity);
+			currentCity = listOfPrev[currentCity->getIndex()];
+		}
+
+		for (int i = shortestPath.getSize() - 1; i > 0; i--)
+		{
+			std::cout << " " << shortestPath[i]->getName().c_str();
+		}
+	}
+
+	std::cout << std::endl;
+
+	delete[] listOfPrev;
 	delete[] distances;
 }
 

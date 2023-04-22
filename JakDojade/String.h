@@ -14,7 +14,7 @@ public:
         this->length = other.length;
         this->data = new char[this->length + 1];
 
-        for (size_t i = 0; i < this->length + 1; ++i) {
+        for (int i = 0; i < this->length + 1; i++) {
             this->data[i] = other.data[i];
         }
     }
@@ -28,72 +28,89 @@ public:
             this->length++;
         }
         this->data = new char[this->length + 1];
-        for (size_t i = 0; i < this->length + 1; ++i) {
+        for (int i = 0; i < this->length + 1; i++)
+        {
             this->data[i] = cString[i];
         }
     }
 
-    String& operator=(const String& other) {
+    String& operator=(const String& other)
+    {
         if (this != &other) {
-            delete[] this->data;
+            
+            if (this->data != nullptr)
+            {
+                delete[] this->data;
+            }
+
             this->length = other.length;
             this->data = new char[this->length + 1];
-            for (size_t i = 0; i < this->length + 1; ++i) {
+
+            for (int i = 0; i < this->length + 1; i++)
+            {
                 this->data[i] = other.data[i];
             }
         }
         return *this;
     }
 
-    ~String() {
-        delete[] this->data;
+    ~String()
+    {
+        if (this->data != nullptr)
+        {
+            delete[] this->data;
+        }
     }
 
-    size_t size() const {
+    int size()
+    {
         return this->length;
     }
 
-    const char* c_str() const {
+    const char* c_str()
+    {
         return this->data;
     }
 
     void append(char c) {
         char* newData = new char[this->length + 2];
-        for (size_t i = 0; i < this->length; i++) {
+        for (int i = 0; i < this->length; i++)
+        {
             newData[i] = data[i];
         }
 
         newData[this->length] = c;
         newData[this->length + 1] = '\0';
-        delete[] this->data;
+
+        if (this->data != nullptr)
+        {
+            delete[] this->data;
+        }
+
         this->data = newData;
         this->length++;
     }
 
-    void append(const String& other) {
-        size_t newLength = this->length + other.length;
+    void append(String& other) {
+        int newLength = this->length + other.length;
         char* newData = new char[newLength + 1];
-        for (size_t i = 0; i < this->length; ++i) {
+        for (int i = 0; i < this->length; i++)
+        {
             newData[i] = this->data[i];
         }
-        for (size_t i = 0; i < other.length + 1; ++i) {
+
+        for (int i = 0; i < other.length + 1; i++)
+        {
             newData[this->length + i] = other.data[i];
         }
 
-        delete[] this->data;
+        if (this->data != nullptr)
+        {
+            delete[] this->data;
+        }
 
         this->data = newData;
         this->length = newLength;
-    }
-
-    int toNumber()
-    {
-        int number = 0;
-
-        for (int i = 0; i < this->length; i++)
-        {
-
-        }
     }
 
     bool equal(char* str)
@@ -133,6 +150,6 @@ public:
     }
 
 private:
-    size_t length;
+    int length;
     char* data;
 };

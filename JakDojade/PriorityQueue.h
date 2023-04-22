@@ -20,16 +20,22 @@ private:
 
     void heapifyDown(int i)
     {
-        int left_child = 2 * i + 1;
-        int right_child = 2 * i + 2;
+        int leftChild = 2 * i + 1;
+        int rightChild = 2 * i + 2;
         int largest = i;
-        if (left_child < heap.getSize() && heap[left_child].distance > heap[largest].distance) {
-            largest = left_child;
+
+        if (leftChild < heap.getSize() && heap[leftChild].distance > heap[largest].distance)
+        {
+            largest = leftChild;
         }
-        if (right_child < heap.getSize() && heap[right_child].distance > heap[largest].distance) {
-            largest = right_child;
+
+        if (rightChild < heap.getSize() && heap[rightChild].distance > heap[largest].distance)
+        {
+            largest = rightChild;
         }
-        if (largest != i) {
+
+        if (largest != i)
+        {
             ListOfNeighbors help = heap[i];
             heap[i] = heap[largest];
             heap[largest] = help;
@@ -39,7 +45,8 @@ private:
     }
 
 public:
-    void push(ListOfNeighbors value) {
+    void push(ListOfNeighbors& value) {
+
         heap.pushBack(value);
         heapifyUp(heap.getSize() - 1);
     }

@@ -1,21 +1,27 @@
 #include "City.h"
 
-City::City(String& name, int positionX, int positionY)
+City::City()
 {
-    this->name = name;
-    this->listOfNeighbors = nullptr;
-    this->numberOfNeighbors = 0;
-    this->positionX = positionX;
-    this->positionY = positionY;
 }
 
-City::City(String&& name, int positionX, int positionY)
+City::City(String& name, int positionX, int positionY, int index)
 {
     this->name = name;
     this->listOfNeighbors = nullptr;
     this->numberOfNeighbors = 0;
     this->positionX = positionX;
     this->positionY = positionY;
+    this->index = index;
+}
+
+City::City(String&& name, int positionX, int positionY, int index)
+{
+    this->name = name;
+    this->listOfNeighbors = nullptr;
+    this->numberOfNeighbors = 0;
+    this->positionX = positionX;
+    this->positionY = positionY;
+    this->index = index;
 }
 
 City::~City()
@@ -48,6 +54,16 @@ int City::getPositionY()
 int City::getNumberOfNeighbors()
 {
     return this->numberOfNeighbors;
+}
+
+void City::setIndex(int index)
+{
+    this->index = index;
+}
+
+int City::getIndex()
+{
+    return this->index;
 }
 
 void City::addNeighbor(City* city, int distance)

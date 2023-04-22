@@ -7,6 +7,9 @@
 #include <limits.h>
 #include <fstream>
 
+#define PRINT_PATH_MODE 1
+#define ONLY_DISTANCE_MODE 0
+
 class Map
 {
 private:
@@ -34,7 +37,7 @@ public:
 	void checkRoads();
 	void printMap();
 	void printCities();
-	void findShortestPath(String& start, String& target);
+	void findShortestPath(String& start, String& target, int mode);
 
 	void zeroIntMap();
 

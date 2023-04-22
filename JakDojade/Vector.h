@@ -6,8 +6,8 @@ class Vector
 private:
 
 	T* tab;
-	unsigned int avalibleSize;
-	unsigned int currentSize;
+	int avalibleSize;
+	int currentSize;
 
 public:
 
@@ -20,7 +20,10 @@ public:
 	
 	~Vector()
 	{
-		delete[] this->tab;
+		if (this->tab != nullptr)
+		{
+			delete[] this->tab;
+		}
 	}
 
 	void pushBack(T value)
@@ -35,7 +38,7 @@ public:
 
 			if (this->tab != nullptr)
 			{
-				delete[] tab;
+				delete[] this->tab;
 			}
 
 			this->avalibleSize *= 2;
@@ -56,14 +59,14 @@ public:
 		return this->tab[this->currentSize];
 	}
 
-	void erase(unsigned int index)
+	void erase(int index)
 	{
 		if (index >= this->currentSize)
 		{
 			return;
 		}
 
-		for (unsigned int i = index; i < this->currentSize - 1; i++)
+		for (int i = index; i < this->currentSize - 1; i++)
 		{
 			this->tab[i] = this->tab[i + 1];
 		}
@@ -71,12 +74,12 @@ public:
 		this->currentSize--;
 	}
 
-	unsigned int getSize()
+	int getSize()
 	{
 		return this->currentSize;
 	}
 
-	T& operator[](unsigned int index)
+	T& operator[](int index)
 	{
 		return this->tab[index];
 	}
