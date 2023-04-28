@@ -54,6 +54,11 @@ public:
         return *this;
     }
 
+    char operator[](int index)
+    {
+        return this->data[index];
+    }
+
     ~String()
     {
         if (this->data != nullptr)

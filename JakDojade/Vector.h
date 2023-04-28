@@ -83,4 +83,10 @@ public:
 	{
 		return this->tab[index];
 	}
+
+	void clear()
+	{
+		this->currentSize = 0;
+	}
+
 };

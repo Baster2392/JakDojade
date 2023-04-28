@@ -87,7 +87,6 @@ void City::addNeighbor(City* city, int distance)
         newNode->nextNode = this->listOfNeighbors;
         this->listOfNeighbors = newNode;
         return;
-
     }
 
     while (currentNode != nullptr)

@@ -54,11 +54,14 @@ void Map::loadFromFile()
 	}
 
 	int positionX, positionY;
+	City* newCity;
 	for (int i = 0; i < this->cityPointsX.getSize(); i++)
 	{
 		positionX = this->cityPointsX[i];
 		positionY = this->cityPointsY[i];
-		this->cities.pushBack(new City(getCityName(positionX, positionY), positionX, positionY, this->cities.getSize()));
+		newCity = new City(findCityName(positionX, positionY), positionX, positionY, this->cities.getSize());
+		this->cities.pushBack(newCity);
+		this->map.add(newCity);
 	}
 
 	// loading airlines
@@ -116,11 +119,14 @@ void Map::loadMap()
 	}
 
 	int positionX, positionY;
+	City* newCity;
 	for (int i = 0; i < this->cityPointsX.getSize(); i++)
 	{
 		positionX = this->cityPointsX[i];
 		positionY = this->cityPointsY[i];
-		this->cities.pushBack(new City(getCityName(positionX, positionY), positionX, positionY, this->cities.getSize()));
+		newCity = new City(findCityName(positionX, positionY), positionX, positionY, this->cities.getSize());
+		this->cities.pushBack(newCity);
+		this->map.add(newCity);
 	}
 
 	// loading airlines
@@ -153,7 +159,7 @@ void Map::loadMap()
 	}
 }
 
-String Map::getCityName(int positionX, int positionY)
+String Map::findCityName(int positionX, int positionY)
 {
 	String name = "";
 	int pointerPosX = positionX, pointerPosY = positionY;
@@ -381,31 +387,18 @@ City* Map::getCityAtPosition(int positionX, int positionY)
 
 City* Map::getCityByName(String& name)
 {
-	for (int i = 0; i < this->cities.getSize(); i++)
-	{
-		if (this->cities[i]->getName().equal(name.c_str()))
-		{
-			return this->cities[i];
-		}
-	}
-
-	std::cout << "Blad" << std::endl;
-	return nullptr;
+	return map.get(name);
 }
 
 City* Map::getCityByName(char* name)
 {
-	for (int i = 0; i < this->cities.getSize(); i++)
-	{
-		//std::cout << this->cities[i]->getName().c_str() << std::endl;
-		if (this->cities[i]->getName().equal(name))
-		{
-			return this->cities[i];
-		}
-	}
+	String strName(name);
+	return map.get(strName);
+}
 
-	std::cout << "Blad" << std::endl;
-	return nullptr;
+City* Map::getCityByNameAndId(String& name, int id)
+{
+	return map.get(name, id);
 }
 
 int Map::getIndexOfCity(String& name)
@@ -427,6 +420,8 @@ void Map::checkRoads()
 	City* currentCity, * foundCity;
 	Vector<int> pointsX;
 	Vector<int> pointsY;
+	Vector<int> visitedX;
+	Vector<int> visitedY;
 	int posX, posY;
 	int currentX, currentY;
 
@@ -442,7 +437,6 @@ void Map::checkRoads()
 			currentY = pointsY[0];
 			pointsX.erase(0);
 			pointsY.erase(0);
-
 
 			// found city
 			if (currentX > 0 && this->intMap[currentX - 1][currentY] == 0 && this->charMap[currentX - 1][currentY] == '*'
@@ -479,6 +473,8 @@ void Map::checkRoads()
 				this->intMap[currentX - 1][currentY] = this->intMap[currentX][currentY] + 1;
 				pointsX.pushBack(currentX - 1);
 				pointsY.pushBack(currentY);
+				visitedX.pushBack(currentX - 1);
+				visitedY.pushBack(currentY);
 			}
 
 			if (currentX < this->width - 1 && this->intMap[currentX + 1][currentY] == 0 && this->charMap[currentX + 1][currentY] == '#')
@@ -486,6 +482,8 @@ void Map::checkRoads()
 				this->intMap[currentX + 1][currentY] = this->intMap[currentX][currentY] + 1;
 				pointsX.pushBack(currentX + 1);
 				pointsY.pushBack(currentY);
+				visitedX.pushBack(currentX + 1);
+				visitedY.pushBack(currentY);
 			}
 
 			if (currentY > 0 && this->intMap[currentX][currentY - 1] == 0 && this->charMap[currentX][currentY - 1] == '#')
@@ -493,6 +491,8 @@ void Map::checkRoads()
 				this->intMap[currentX][currentY - 1] = this->intMap[currentX][currentY] + 1;
 				pointsX.pushBack(currentX);
 				pointsY.pushBack(currentY - 1);
+				visitedX.pushBack(currentX);
+				visitedY.pushBack(currentY - 1);
 			}
 
 			if (currentY < this->height - 1 && this->intMap[currentX][currentY + 1] == 0 && this->charMap[currentX][currentY + 1] == '#')
@@ -500,10 +500,14 @@ void Map::checkRoads()
 				this->intMap[currentX][currentY + 1] = this->intMap[currentX][currentY] + 1;
 				pointsX.pushBack(currentX);
 				pointsY.pushBack(currentY + 1);
+				visitedX.pushBack(currentX);
+				visitedY.pushBack(currentY + 1);
 			}
 		}
 
-		zeroIntMap();
+		zeroIntMap(&visitedX, &visitedY);
+		visitedX.clear();
+		visitedY.clear();
 	}
 }
 
@@ -548,7 +552,6 @@ void Map::findShortestPath(String& start, String& target, int mode)
 	int* distances = new int[this->cities.getSize()];
 	City** listOfPrev = new City*[this->cities.getSize()];
 
-	bool visited = false;
 	City* startCity = getCityByName(start);
 	City* targetCity = getCityByName(target);
 	Vector<City*> previous;
@@ -556,7 +559,7 @@ void Map::findShortestPath(String& start, String& target, int mode)
 
 	for (int i = 0; i < this->cities.getSize(); i++)
 	{
-		distances[i] = 1000000;
+		distances[i] = INFINITY;
 		listOfPrev[i] = nullptr;
 	}
 
@@ -577,7 +580,7 @@ void Map::findShortestPath(String& start, String& target, int mode)
 		// check if verticle is visited
 		for (int i = 0; i < previous.getSize(); i++)
 		{
-			if (previous[i]->getName().equal(currentNode.city->getName().c_str()))
+			if (previous[i]->getIndex() == currentNode.city->getIndex())
 			{
 				continue;
 			}
@@ -635,14 +638,11 @@ void Map::findShortestPath(String& start, String& target, int mode)
 	delete[] distances;
 }
 
-void Map::zeroIntMap()
+void Map::zeroIntMap(Vector<int>* pointsX, Vector<int>* pointsY)
 {
-	for (int i = 0; i < width; i++)
+	for (int i = 0; i < pointsX->getSize(); i++)
 	{
-		for (int j = 0; j < height; j++)
-		{
-			this->intMap[i][j] = 0;
-		}
+		this->intMap[(*pointsX)[i]][(*pointsY)[i]] = 0;
 	}
 }
 
