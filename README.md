@@ -21,6 +21,7 @@ Where number at end is mode in which application give us result:
 1 - additionaly write sequence of towns which we have to visit in our shortest path
 
 Example of full .txt file which can be parsed in application:
+```
 20 20
 .........GDANSK.....
 ........*...........
@@ -47,3 +48,4 @@ Example of full .txt file which can be parsed in application:
 KIELCE KRAKOW 0
 KRAKOW GDANSK 0
 KRAKOW GDANSK 1
+```
