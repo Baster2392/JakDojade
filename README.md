@@ -2,7 +2,7 @@ Title:
 JakDojade
 
 How it works?
-Application read maps written in .txt files by following rules:
+Application reads maps written in .txt files by following rules:
 - '#' - road from one town to another. It means 1 unit of lenght
 - '*' - town, near this symbol, should occur name of town
 - '.' - empty space
