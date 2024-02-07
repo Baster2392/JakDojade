@@ -1,7 +1,6 @@
-Title:
-JakDojade
+# Jak dojadę?
 
-How it works?
+### How it works?
 Application reads maps written in .txt files by following rules:
 - '#' - road from one town to another. It means 1 unit of lenght
 - '*' - town, near this symbol, should occur name of town
@@ -20,7 +19,7 @@ Where number at end is mode in which application give us result:
 0 - write only length of shortest path
 1 - additionaly write sequence of towns which we have to visit in our shortest path
 
-Example of full .txt file which can be parsed in application:
+### Example of full .txt file which can be parsed in application:
 ```
 20 20
 .........GDANSK.....
