@@ -8,8 +8,10 @@ Application reads maps written in .txt files by following rules:
 
 Map may included airline connections, which are additional connections between towns. 
 This is example:
+```
 1
 TOWN1 TOWN2 26
+```
 Where 26 is distance between towns, comparable with distance read from map and 1 is number of airlines to read.
 
 Appplication parse file and build map of neighbours. In second step we can write a query and ask application what is shortest path between two towns.
