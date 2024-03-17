@@ -164,7 +164,7 @@ String Map::findCityName(int positionX, int positionY)
 	String name = "";
 	int pointerPosX = positionX, pointerPosY = positionY;
 
-	// nazwa z prawej
+	// name of city on right
 	if (positionX < this->width - 1 &&
 		this->charMap[positionX + 1][positionY] != '*' &&
 		this->charMap[positionX + 1][positionY] != '.' &&
@@ -180,7 +180,7 @@ String Map::findCityName(int positionX, int positionY)
 			pointerPosX++;
 		}
 	}
-	// nazwa z lewej
+	// name of city on left
 	else
 		if (positionX > 0 &&
 			this->charMap[positionX - 1][positionY] != '*' &&
@@ -203,7 +203,7 @@ String Map::findCityName(int positionX, int positionY)
 				pointerPosX++;
 			}
 		}
-	// nazwa u góry
+	// name of city above
 	else
 		if (positionY > 0 &&
 			this->charMap[positionX][positionY - 1] != '*' &&
@@ -229,7 +229,7 @@ String Map::findCityName(int positionX, int positionY)
 				pointerPosX++;
 			}
 		}
-	// nazwa z do³u
+	// name of city below
 	else
 		if (positionY < this->height - 1 &&
 			this->charMap[positionX][positionY + 1] != '*' &&
@@ -256,7 +256,7 @@ String Map::findCityName(int positionX, int positionY)
 				pointerPosX++;
 			}
 		}
-	// nazwa w górnym prawym rogu
+	// name of city in top right corner
 	else
 		if (positionY > 0 &&
 			positionX < this->width - 1 &&
@@ -284,7 +284,7 @@ String Map::findCityName(int positionX, int positionY)
 				pointerPosX++;
 			}
 		}
-	// nazwa w dolnym prawym rogu
+	// name of city in bottom right corner
 	else
 		if (positionY < this->height - 1 &&
 			positionX < this->width - 1 &&
@@ -312,7 +312,7 @@ String Map::findCityName(int positionX, int positionY)
 				pointerPosX++;
 			}
 		}
-	// nazwa w górnym lewym rogu
+	// name of city in top left corner
 	else
 		if (positionY > 0 &&
 			positionX > 0 &&
@@ -340,7 +340,7 @@ String Map::findCityName(int positionX, int positionY)
 				pointerPosX++;
 			}
 							}
-	// nazwa w dolnym lewym rogu
+	// name of city in bottom left corner
 	else
 		if (positionY < this->height - 1 &&
 			positionX > 0 &&
